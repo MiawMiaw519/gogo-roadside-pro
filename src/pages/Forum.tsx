@@ -1,10 +1,19 @@
-import { MessageSquare, ThumbsUp, Clock, User } from "lucide-react";
+import { MessageSquare, ThumbsUp, Clock, User, Plus } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Forum = () => {
+  const [selectedTopic, setSelectedTopic] = useState<number | null>(null);
+  const [isNewTopicOpen, setIsNewTopicOpen] = useState(false);
+  const { toast } = useToast();
   const forumTopics = [
     {
       title: "Entretien préventif : à quelle fréquence ?",
@@ -67,14 +76,49 @@ const Forum = () => {
               <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-3xl font-bold">Discussions Récentes</h2>
-                  <Button>Nouvelle Discussion</Button>
+                  <Dialog open={isNewTopicOpen} onOpenChange={setIsNewTopicOpen}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Nouvelle Discussion
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Créer une nouvelle discussion</DialogTitle>
+                        <DialogDescription>
+                          Posez votre question ou partagez votre expérience avec la communauté
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={(e) => {
+                        e.preventDefault();
+                        toast({
+                          title: "Discussion créée !",
+                          description: "Votre discussion a été publiée avec succès.",
+                        });
+                        setIsNewTopicOpen(false);
+                      }} className="space-y-4">
+                        <div>
+                          <Label htmlFor="topic-title">Titre</Label>
+                          <Input id="topic-title" placeholder="Ex: Problème de freinage..." required />
+                        </div>
+                        <div>
+                          <Label htmlFor="topic-content">Message</Label>
+                          <Textarea id="topic-content" placeholder="Décrivez votre question ou problème..." className="min-h-[150px]" required />
+                        </div>
+                        <Button type="submit" className="w-full">Publier</Button>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <div className="space-y-4">
                   {forumTopics.map((topic, index) => (
-                    <Card key={index} className="hover:border-primary transition-colors cursor-pointer">
-                      <CardHeader>
-                        <CardTitle className="text-xl">{topic.title}</CardTitle>
+                    <Dialog key={index}>
+                      <DialogTrigger asChild>
+                        <Card className="hover:border-primary transition-colors cursor-pointer">
+                          <CardHeader>
+                            <CardTitle className="text-xl">{topic.title}</CardTitle>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
@@ -85,26 +129,83 @@ const Forum = () => {
                             <span>{topic.date}</span>
                           </div>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-muted-foreground mb-4">{topic.preview}</p>
-                        <div className="flex items-center gap-4 text-sm">
-                          <div className="flex items-center gap-1 text-primary">
-                            <MessageSquare className="w-4 h-4" />
-                            <span>{topic.replies} réponses</span>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground mb-4">{topic.preview}</p>
+                            <div className="flex items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1 text-primary">
+                                <MessageSquare className="w-4 h-4" />
+                                <span>{topic.replies} réponses</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-primary">
+                                <ThumbsUp className="w-4 h-4" />
+                                <span>{topic.likes} likes</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl">{topic.title}</DialogTitle>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <User className="w-4 h-4" />
+                              <span>{topic.author}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              <span>{topic.date}</span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1 text-primary">
-                            <ThumbsUp className="w-4 h-4" />
-                            <span>{topic.likes} likes</span>
+                        </DialogHeader>
+                        <div className="space-y-6">
+                          <div>
+                            <p className="text-muted-foreground">{topic.preview}</p>
+                          </div>
+                          
+                          <div className="border-t pt-4">
+                            <h4 className="font-semibold mb-4">{topic.replies} Réponses</h4>
+                            <div className="space-y-4">
+                              <Card className="bg-muted">
+                                <CardContent className="pt-4">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <User className="w-4 h-4" />
+                                    <span className="font-semibold">Expert Mécanique</span>
+                                    <span className="text-sm text-muted-foreground">Il y a 1 jour</span>
+                                  </div>
+                                  <p className="text-sm">
+                                    Pour ce type de problème, je vous recommande de vérifier en premier lieu le circuit hydraulique. 
+                                    N'hésitez pas à appeler Gogo Dépannage PL au 07 63 20 59 81 pour un diagnostic professionnel.
+                                  </p>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </div>
+                          
+                          <div className="border-t pt-4">
+                            <h4 className="font-semibold mb-2">Ajouter une réponse</h4>
+                            <Textarea placeholder="Partagez votre expérience ou posez une question..." className="mb-2" />
+                            <Button onClick={() => {
+                              toast({
+                                title: "Réponse publiée !",
+                                description: "Votre réponse a été ajoutée avec succès.",
+                              });
+                            }}>Publier la réponse</Button>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </DialogContent>
+                    </Dialog>
                   ))}
                 </div>
 
                 <div className="mt-8 text-center">
-                  <Button variant="outline" size="lg">Voir Plus de Discussions</Button>
+                  <Button variant="outline" size="lg" onClick={() => {
+                    toast({
+                      title: "Chargement...",
+                      description: "Fonctionnalité bientôt disponible",
+                    });
+                  }}>Voir Plus de Discussions</Button>
                 </div>
               </div>
 
