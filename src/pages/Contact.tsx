@@ -22,16 +22,14 @@ const Contact = () => {
         <section className="bg-gradient-to-br from-primary to-secondary text-white py-16">
           <div className="container mx-auto px-4">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Contactez-nous</h1>
-            <p className="text-xl text-white/90">
-              Nous sommes là pour vous aider 24h/24 et 7j/7
-            </p>
+            <p className="text-xl text-white/90">Nous sommes là pour vous aider 24h/24 et 7j/7</p>
           </div>
         </section>
 
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Informations de contact */}
+              {/* Coordonnées */}
               <div>
                 <h2 className="text-3xl font-bold mb-6">Coordonnées</h2>
                 <div className="space-y-6 mb-8">
@@ -74,9 +72,7 @@ const Contact = () => {
                 <Card className="bg-gradient-to-br from-primary to-secondary text-white border-0">
                   <CardContent className="p-6">
                     <h3 className="font-semibold text-xl mb-2">Urgence ? Appelez maintenant !</h3>
-                    <p className="text-white/90 mb-4">
-                      Pour un dépannage urgent, le moyen le plus rapide est de nous appeler directement.
-                    </p>
+                    <p className="text-white/90 mb-4">Pour un dépannage urgent, le moyen le plus rapide est de nous appeler directement.</p>
                     <Button size="lg" variant="default" className="bg-accent hover:bg-accent/90 w-full" asChild>
                       <a href="tel:0763205981">
                         <Phone className="mr-2 h-5 w-5" /> Appeler Maintenant
@@ -86,7 +82,7 @@ const Contact = () => {
                 </Card>
               </div>
 
-              {/* Formulaire de contact */}
+              {/* Formulaire Netlify */}
               <div>
                 <h2 className="text-3xl font-bold mb-6">Formulaire de Contact</h2>
                 <Card>
@@ -95,7 +91,7 @@ const Contact = () => {
                       name="contact" 
                       method="POST" 
                       data-netlify="true"
-                      onSubmit={handleSubmit} 
+                      onSubmit={handleSubmit}
                       className="space-y-4"
                     >
                       <input type="hidden" name="form-name" value="contact" />
@@ -130,9 +126,7 @@ const Contact = () => {
                       </Button>
                     </form>
 
-                    <p className="text-sm text-muted-foreground text-center mt-4">
-                      Nous vous répondrons dans les plus brefs délais
-                    </p>
+                    <p className="text-sm text-muted-foreground text-center mt-4">Nous vous répondrons dans les plus brefs délais</p>
                   </CardContent>
                 </Card>
               </div>
@@ -146,22 +140,13 @@ const Contact = () => {
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-4">Zone d'Intervention</h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Bien que notre garage soit situé à Gasny dans l'Eure, nous intervenons <strong>partout en France</strong> 
-                pour tous vos besoins de dépannage et de mécanique poids lourd. Aucune distance n'est trop grande pour vous venir en aide !
+                Bien que notre garage soit situé à Gasny dans l'Eure, nous intervenons <strong>partout en France</strong> pour tous vos besoins de dépannage et de mécanique poids lourd. Aucune distance n'est trop grande pour vous venir en aide !
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-background p-4 rounded-lg">
-                  <p className="font-semibold">Normandie</p>
-                </div>
-                <div className="bg-background p-4 rounded-lg">
-                  <p className="font-semibold">Île-de-France</p>
-                </div>
-                <div className="bg-background p-4 rounded-lg">
-                  <p className="font-semibold">Hauts-de-France</p>
-                </div>
-                <div className="bg-background p-4 rounded-lg">
-                  <p className="font-semibold">Toute la France</p>
-                </div>
+                <div className="bg-background p-4 rounded-lg"><p className="font-semibold">Normandie</p></div>
+                <div className="bg-background p-4 rounded-lg"><p className="font-semibold">Île-de-France</p></div>
+                <div className="bg-background p-4 rounded-lg"><p className="font-semibold">Hauts-de-France</p></div>
+                <div className="bg-background p-4 rounded-lg"><p className="font-semibold">Toute la France</p></div>
               </div>
             </div>
           </div>
