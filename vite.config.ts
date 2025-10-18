@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
-  base: "/gogo-roadside-pro/",
+  base: "/gogo-roadside-pro/", // <-- important pour GitHub Pages
   plugins: [react()],
   resolve: {
     alias: {
