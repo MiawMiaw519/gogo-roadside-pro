@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: "/gogo-roadside-pro/", // <-- essentiel pour GitHub Pages
+  base: "/", // <--- ajoute cette ligne
   server: {
     host: "::",
     port: 8080,
