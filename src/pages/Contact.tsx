@@ -6,11 +6,51 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Contact = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Form handling logic here
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
+
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: data,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message envoyé !",
+        description: "Nous vous répondrons dans les plus brefs délais.",
+      });
+
+      // Réinitialiser le formulaire
+      e.currentTarget.reset();
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue. Veuillez réessayer ou nous appeler directement.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -98,37 +138,38 @@ const Contact = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
                         <Label htmlFor="name">Nom complet</Label>
-                        <Input id="name" type="text" placeholder="Votre nom" required />
+                        <Input id="name" name="name" type="text" placeholder="Votre nom" required />
                       </div>
                       
                       <div>
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="votre@email.com" required />
+                        <Input id="email" name="email" type="email" placeholder="votre@email.com" required />
                       </div>
                       
                       <div>
                         <Label htmlFor="phone">Téléphone</Label>
-                        <Input id="phone" type="tel" placeholder="06 12 34 56 78" />
+                        <Input id="phone" name="phone" type="tel" placeholder="06 12 34 56 78" />
                       </div>
                       
                       <div>
                         <Label htmlFor="subject">Sujet</Label>
-                        <Input id="subject" type="text" placeholder="Objet de votre demande" required />
+                        <Input id="subject" name="subject" type="text" placeholder="Objet de votre demande" required />
                       </div>
                       
                       <div>
                         <Label htmlFor="message">Message</Label>
                         <Textarea 
-                          id="message" 
+                          id="message"
+                          name="message"
                           placeholder="Décrivez votre besoin ou votre question..."
                           className="min-h-[150px]"
                           required
                         />
                       </div>
                       
-                      <Button type="submit" size="lg" className="w-full">
+                      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                         <Mail className="mr-2 h-5 w-5" />
-                        Envoyer le Message
+                        {isSubmitting ? "Envoi en cours..." : "Envoyer le Message"}
                       </Button>
                     </form>
                     
